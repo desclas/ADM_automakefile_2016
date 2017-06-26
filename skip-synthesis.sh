@@ -27,13 +27,7 @@ have_name(){
     done
     local res=$(($k-$i))
     echo -n "${nom:$i:$res}"
-    res=$((20-$res))
-    i=0
-    while [ $i -lt $res ]
-    do
-	echo -n " "
-	i=$(($i+1))
-    done
+    echo -ne '\t'
 }
 
 file_name(){
