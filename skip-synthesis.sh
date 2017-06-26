@@ -45,19 +45,40 @@ file_name(){
     echo "${nom:$i}"
 }
 
-print_it(){
-    have_name
-    file_name
+check_file(){
+    local i=${#nom}
+    local len=${#1}
+    while [ $i -gt 0 ] && [ "${nom:$i:1}" != " " ]
+    do
+	i=$(($i-1))
+    done
+    i=$(($i+1))
+    if [ ${nom:$i:$len} = $1 ]; then
+	return 0
+    else
+	return 1
+    fi
 }
 
-read nom
-if [ -n "$nom" ]; then
+print_it(){
+    check_file $1
+    if [ $? -eq 0 ]; then
+	have_name
+	file_name
+    fi
+}
+
+if [ $# -eq 1 ]; then
     read nom
-    while [ -n "$nom" ]
-    do
-	print_it
+    if [ -n "$nom" ]; then
 	read nom
-    done
-    exit 0
+	while [ -n "$nom" ]
+	do
+	    print_it $1
+	    read nom
+	done
+	exit 0
+    fi
 fi
 exit 0
+
