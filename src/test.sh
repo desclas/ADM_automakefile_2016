@@ -3,8 +3,13 @@
 check_pjd(){
     local i=0
     while [ $i -lt ${#tab} ]; do
-	if [ "${tab[$i]:0:11}" = "PROJECT_DIR" ]; then
-	    return 0
+	if [ "${tab[$i]:0:12}" = "PROJECT_DIR;" ]; then
+	    test -e "${tab[$i]:0:12}" -a -d "${tab[$i]:0:12}"
+	    if [ $? -eq 1 ]; then
+		exit 84
+	    else
+		return 0
+	    fi
 	fi
 	i=$(($i+1))
     done
@@ -249,14 +254,6 @@ get_make(){
 }
 
 main_fnt(){
-    check_pjd
-    if [ $? -ne 0 ]; then
-	exit 84
-    fi
-    check_dotc
-    if [ $? -ne 0 ]; then
-	exit 84
-    fi
     echo -ne "SRC\t=\t" >> "$makeit"
     all_c
     echo >> "$makeit"
@@ -284,6 +281,14 @@ while read line ; do
     tab=( "${tab[@]}" "$line" )
 done < $1
 tab=( "${tab[@]}" "$line" )
+check_pjd
+if [ $? -ne 0 ]; then
+    exit 84
+fi
+check_dotc
+if [ $? -ne 0 ]; then
+    exit 84
+fi
 get_make
 if [ -e "$makeit" ]; then
     rm "$makeit"
