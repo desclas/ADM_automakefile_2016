@@ -205,6 +205,8 @@ p_zip_and_unzip(){
 }
 
 p_end(){
+    echo ".PHONY: all clean fclean re" >> "$makeit"
+    echo >> "$makeit"
     echo "all: \$(EXEC)" >> "$makeit"
     echo >> "$makeit"
     echo "\$(EXEC): \$(OBJ)" >> "$makeit"
@@ -219,7 +221,7 @@ p_end(){
     echo "re: fclean all" >> "$makeit"
     echo >> "$makeit"
     echo "archive:" >> "$makeit"
-    echo -e "\t\$(ZIP) \$(ZIPFLAGS) \$(BCK_DIR)" >> "$makeit"
+    echo -e "\t\$(ZIP) \$(ZIPFLAGS) \$(BCK_DIR) \$(SRC)" >> "$makeit"
     echo >> "$makeit"
     echo "revert:" >> "$makeit"
     echo -e "\t\$(UNZIP) \$(UNZIPFLAGS) \$(BCK_DIR)" >> "$makeit"
