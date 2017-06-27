@@ -205,7 +205,7 @@ p_zip_and_unzip(){
 }
 
 p_end(){
-    echo ".PHONY: all clean fclean re" >> "$makeit"
+    echo ".PHONY: all clean fclean re revert archive delete" >> "$makeit"
     echo >> "$makeit"
     echo "all: \$(EXEC)" >> "$makeit"
     echo >> "$makeit"
@@ -213,7 +213,7 @@ p_end(){
     echo -e "\t\$(CC) -o \$@ \$^ \$(LDFLAGS)" >> "$makeit"
     echo >> "$makeit"
     echo "clean:" >> "$makeit"
-    echo -e "\trm -r \$(OBJ)" >> "$makeit"
+    echo -e "\trm -f \$(OBJ)" >> "$makeit"
     echo >> "$makeit"
     echo "fclean: clean" >> "$makeit"
     echo -e "\trm -f \$(EXEC)" >> "$makeit"
