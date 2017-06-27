@@ -106,8 +106,8 @@ ld_flag(){
     local i=0
     echo -ne "LDFLAGS\t=" >> "$makeit"
     while [ $i -lt ${#tab} ]; do
-	if [ "${tab[$i]:0:7}" = "LDFLAGS;" ]; then
-	    echo -ne "\t${tab[$i]:7}" >> "$makeit"
+	if [ "${tab[$i]:0:8}" = "LDFLAGS;" ]; then
+	    echo -ne "\t${tab[$i]:8}" >> "$makeit"
 	    break
 	fi
 	i=$(($i+1))
@@ -134,8 +134,8 @@ p_bckdir(){
     local i=0
     echo -ne "BCK_DIR\t=" >> "$makeit"
     while [ $i -lt ${#tab} ]; do
-	if [ "${tab[$i]:0:7}" = "BCK_DIR;" ]; then
-	    echo -ne "\t${tab[$i]:7}" >> "$makeit"
+	if [ "${tab[$i]:0:8}" = "BCK_DIR;" ]; then
+	    echo -ne "\t${tab[$i]:8}" >> "$makeit"
 	    break
 	fi
 	i=$(($i+1))
