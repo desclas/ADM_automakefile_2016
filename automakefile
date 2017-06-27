@@ -2,9 +2,9 @@
 
 check_pjd(){
     local i=0
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:12}" = "PROJECT_DIR;" ]; then
-	    test -e "${tab[$i]:0:12}" -a -d "${tab[$i]:0:12}"
+	    test -e "${tab[$i]:12}" -a -d "${tab[$i]:12}"
 	    if [ $? -eq 1 ]; then
 		exit 84
 	    else
@@ -19,7 +19,7 @@ check_pjd(){
 check_dotc(){
     local i=0
     local k=0
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	k=0
 	while [ $k -lt ${#tab[$i]} ] && [ "${tab[$i]:$k:1}" != ";" ]; do
 	    if [ "${tab[$i]:$k:2}" = ".c" ]; then
@@ -36,7 +36,7 @@ all_c(){
     local i=0
     local k=0
     local len=0
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	k=0
 	while [ $k -lt ${#tab[$i]} ] && [ "${tab[$i]:$k:1}" != ";" ]; do
 	    if [ "${tab[$i]:$k:2}" = ".c" ]; then
@@ -52,7 +52,7 @@ all_c(){
     len=$(($k+2))
     echo -n "${tab[$i]:0:$len}" >> "$makeit"
     i=$(($i+1))
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	k=0
 	while [ $k -lt ${#tab[$i]} ] && [ "${tab[$i]:$k:1}" != ";" ]; do
 	    if [ "${tab[$i]:$k:2}" = ".c" ]; then
@@ -70,7 +70,7 @@ all_c(){
 cc_flag(){
     local i=0
     echo -ne "CC\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:3}" = "CC;" ]; then
 	    echo -ne "\t${tab[$i]:3}" >> "$makeit"
 	    break
@@ -83,7 +83,7 @@ cc_flag(){
 
 if_include(){
     local i=0
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:12}" = "HEADERS_DIR;" ]; then
 	    echo -n " -I${tab[$i]:12}" >> "$makeit"
 	    break
@@ -95,7 +95,7 @@ if_include(){
 cflag(){
     local i=0
     echo -ne "CFLAGS\t+=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:7}" = "CFLAGS;" ]; then
 	    echo -ne "\t${tab[$i]:7}" >> "$makeit"
 	    break
@@ -110,7 +110,7 @@ cflag(){
 ld_flag(){
     local i=0
     echo -ne "LDFLAGS\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:8}" = "LDFLAGS;" ]; then
 	    echo -ne "\t${tab[$i]:8}" >> "$makeit"
 	    break
@@ -124,7 +124,7 @@ ld_flag(){
 p_exec(){
     local i=0
     echo -ne "EXEC\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:5}" = "EXEC;" ]; then
 	    echo -ne "\t${tab[$i]:5}" >> "$makeit"
 	    break
@@ -138,7 +138,7 @@ p_exec(){
 p_bckdir(){
     local i=0
     echo -ne "BCK_DIR\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:8}" = "BCK_DIR;" ]; then
 	    echo -ne "\t${tab[$i]:8}" >> "$makeit"
 	    break
@@ -152,7 +152,7 @@ p_bckdir(){
 p_unzipflags(){
     local i=0
     echo -ne "UNZIPFLAGS\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:11}" = "UNZIPFLAGS;" ]; then
 	    echo -ne "\t${tab[$i]:11}" >> "$makeit"
 	    break
@@ -167,7 +167,7 @@ p_unzipflags(){
 p_unzip(){
     local i=0
     echo -ne "UNZIP\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:6}" = "UNZIP;" ]; then
 	    echo -ne "\t${tab[$i]:6}" >> "$makeit"
 	    break
@@ -182,7 +182,7 @@ p_unzip(){
 p_zipflag(){
     local i=0
     echo -ne "ZIPFLAGS\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:9}" = "ZIPFLAGS;" ]; then
 	    echo -ne "\t${tab[$i]:9}" >> "$makeit"
 	    break
@@ -197,7 +197,7 @@ p_zipflag(){
 p_zip_and_unzip(){
     local i=0
     echo -ne "ZIP\t=" >> "$makeit"
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:4}" = "ZIP;" ]; then
 	    echo -ne "\t${tab[$i]:4}" >> "$makeit"
 	    break
@@ -227,6 +227,7 @@ p_end(){
     echo >> "$makeit"
     echo "archive:" >> "$makeit"
     echo -e "\t\$(ZIP) \$(ZIPFLAGS) \$(BCK_DIR) \$(SRC)" >> "$makeit"
+    echo -e "\t@echo \"\$(BCK_DIR) file generated.\"" >> "$makeit"
     echo >> "$makeit"
     echo "revert:" >> "$makeit"
     echo -e "\t\$(UNZIP) \$(UNZIPFLAGS) \$(BCK_DIR)" >> "$makeit"
@@ -238,7 +239,7 @@ p_end(){
 get_make(){
     local i=0
     declare -a tmp=()
-    while [ $i -lt ${#tab} ]; do
+    while [ $i -lt $tablen ]; do
 	if [ "${tab[$i]:0:12}" = "PROJECT_DIR;" ]; then
 	    tmp[0]="${tab[$i]:12}"
 	    break
@@ -281,6 +282,8 @@ while read line ; do
     tab=( "${tab[@]}" "$line" )
 done < $1
 tab=( "${tab[@]}" "$line" )
+tablen=${#tab[@]}
+echo "tablen = $tablen"
 check_pjd
 if [ $? -ne 0 ]; then
     exit 84
