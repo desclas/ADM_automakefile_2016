@@ -238,8 +238,12 @@ get_make(){
 	fi
 	i=$(($i+1))
     done
-    tmp[1]="Makefile"
-    makeit=$(IFS="/"; echo "${tmp[*]}")
+    if [ ${#tab[$i]} -eq 12 ]; then
+	makeit="Makefile"
+    else
+	tmp[1]="Makefile"
+	makeit=$(IFS="/"; echo "${tmp[*]}")
+    fi
 }
 
 if [ $# -ne 1 ] && [ !-f $1 ]; then
