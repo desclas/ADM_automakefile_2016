@@ -214,7 +214,7 @@ p_end(){
     echo -e "\trm -r \$(OBJ)" >> "$makeit"
     echo >> "$makeit"
     echo "fclean: clean" >> "$makeit"
-    echo -e "\trm -f \$(OBJ)" >> "$makeit"
+    echo -e "\trm -f \$(EXEC)" >> "$makeit"
     echo >> "$makeit"
     echo "re: fclean all" >> "$makeit"
     echo >> "$makeit"
