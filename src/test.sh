@@ -246,6 +246,30 @@ get_make(){
     fi
 }
 
+main_fnt(){
+    check_pjd
+    if [ $? -ne 0 ]; then
+	exit 84
+    fi
+    check_dotc
+    if [ $? -ne 0 ]; then
+	exit 84
+    fi
+    echo -ne "SRC\t=\t" >> "$makeit"
+    all_c
+    echo >> "$makeit"
+    echo >> "$makeit"
+    echo -ne "OBJ\t=\t\$(SRC:.c=.o)" >> "$makeit"
+    echo >> "$makeit"
+    echo >> "$makeit"
+    cc_flag
+    cflag
+    ld_flag
+    p_exec
+    p_zip_and_unzip
+    p_end
+}
+
 if [ $# -ne 1 ] && [ !-f $1 ]; then
     exit 84
 fi
@@ -259,24 +283,4 @@ if [ -e "$makeit" ]; then
     rm "$makeit"
 fi
 touch "$makeit"
-check_pjd
-if [ $? -ne 0 ]; then
-    exit 84
-fi
-check_dotc
-if [ $? -ne 0 ]; then
-    exit 84
-fi
-echo -ne "SRC\t=\t" >> "$makeit"
-all_c
-echo >> "$makeit"
-echo >> "$makeit"
-echo -ne "OBJ\t=\t\$(SRC:.c=.o)" >> "$makeit"
-echo >> "$makeit"
-echo >> "$makeit"
-cc_flag
-cflag
-ld_flag
-p_exec
-p_zip_and_unzip
-p_end
+main_fnt
