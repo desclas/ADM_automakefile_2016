@@ -272,7 +272,11 @@ main_fnt(){
     p_end
 }
 
-if [ $# -ne 1 ] && [ !-f $1 ]; then
+if [ $# -ne 1 ]; then
+    exit 84
+fi
+test -e "$1" -a -f "$1"
+if [ $? -eq 1 ]; then
     exit 84
 fi
 declare -a tab=()
@@ -286,3 +290,4 @@ if [ -e "$makeit" ]; then
 fi
 touch "$makeit"
 main_fnt
+exit 0
