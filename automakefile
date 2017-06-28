@@ -50,15 +50,19 @@ all_c(){
 	i=$(($i+1))
     done
     len=$(($k+2))
-    echo -n "$source_c/${tab[$i]:0:$len}" >> "$makeit"
+    if [ -f "$source_c/${tab[$i]:0:$len}" ]; then
+	echo -n "$source_c/${tab[$i]:0:$len}" >> "$makeit"
+    fi
     i=$(($i+1))
     while [ $i -lt $tablen ]; do
 	k=0
 	while [ $k -lt ${#tab[$i]} ] && [ "${tab[$i]:$k:1}" != ";" ]; do
 	    if [ "${tab[$i]:$k:2}" = ".c" ]; then
 		len=$(($k+2))
-		echo -e "\t\\" >> "$makeit"
-		echo -ne "\t\t$source_c/${tab[$i]:0:$len}" >> "$makeit"
+		if [ -f "$source_c/${tab[$i]:0:$len}" ]; then
+		    echo -e "\t\\" >> "$makeit"
+		    echo -ne "\t\t$source_c/${tab[$i]:0:$len}" >> "$makeit"
+		fi
 		break
 	    fi
 	    k=$(($k+1))
@@ -152,7 +156,7 @@ p_bckdir(){
 	i=$(($i+1))
     done
     if [ "${tab[$i]:0:8}" != "BCK_DIR;" ]; then
-	echo -ne "\ta.out.tar" >> "$makeit"
+	echo -ne "\ta.out" >> "$makeit"
     fi
     echo >> "$makeit"
     echo >> "$makeit"
@@ -247,11 +251,12 @@ p_end(){
     echo "re: fclean all" >> "$makeit"
     echo >> "$makeit"
     echo "archive:" >> "$makeit"
-    echo -e "\t\$(ZIP) \$(ZIPFLAGS) \$(BCK_DIR) \$(SRC)" >> "$makeit"
-    echo -e "\t@echo \"\$(BCK_DIR) file generated.\"" >> "$makeit"
+    echo -e "\t@if [ ! -d \$(BCK_DIR) ]; then mkdir \$(BCK_DIR); fi" >> "$makeit"
+    echo -e "\t\$(ZIP) \$(ZIPFLAGS) \$(BCK_DIR)/\$(EXEC).tar \$(SRC)" >> "$makeit"
+    echo -e "\t@echo \"\$(EXEC).tar file generated.\"" >> "$makeit"
     echo >> "$makeit"
     echo "revert:" >> "$makeit"
-    echo -e "\t\$(UNZIP) \$(UNZIPFLAGS) \$(BCK_DIR)" >> "$makeit"
+    echo -e "\t\$(UNZIP) \$(UNZIPFLAGS) \$(BCK_DIR)/\$(EXEC).tar" >> "$makeit"
     echo >> "$makeit"
     echo "delete:" >> "$makeit"
     echo -e "\trm -f \$(BCK_DIR)" >> "$makeit"
