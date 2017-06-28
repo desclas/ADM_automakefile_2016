@@ -77,8 +77,9 @@ cc_flag(){
 	fi
 	i=$(($i+1))
     done
-    echo >> "$makeit"
-    echo >> "$makeit"
+    if [ "${tab[$i]:0:3}" != "CC;" ]; then
+	echo -ne "\tgcc" >> "$makeit"
+    fi
 }
 
 if_include(){
@@ -131,6 +132,9 @@ p_exec(){
 	fi
 	i=$(($i+1))
     done
+    if [ "${tab[$i]:0:5}" != "EXEC;" ]; then
+	echo -ne "\ta.out" >> "$makeit"
+    fi
     echo >> "$makeit"
     echo >> "$makeit"
 }
@@ -283,7 +287,6 @@ while read line ; do
 done < $1
 tab=( "${tab[@]}" "$line" )
 tablen=${#tab[@]}
-echo "tablen = $tablen"
 check_pjd
 if [ $? -ne 0 ]; then
     exit 84
