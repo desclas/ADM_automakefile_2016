@@ -50,7 +50,7 @@ all_c(){
 	i=$(($i+1))
     done
     len=$(($k+2))
-    echo -n "${tab[$i]:0:$len}" >> "$makeit"
+    echo -n "$source_c/${tab[$i]:0:$len}" >> "$makeit"
     i=$(($i+1))
     while [ $i -lt $tablen ]; do
 	k=0
@@ -58,7 +58,7 @@ all_c(){
 	    if [ "${tab[$i]:$k:2}" = ".c" ]; then
 		len=$(($k+2))
 		echo -e "\t\\" >> "$makeit"
-		echo -ne "\t\t${tab[$i]:0:$len}" >> "$makeit"
+		echo -ne "\t\t$source_c/${tab[$i]:0:$len}" >> "$makeit"
 		break
 	    fi
 	    k=$(($k+1))
@@ -80,6 +80,8 @@ cc_flag(){
     if [ "${tab[$i]:0:3}" != "CC;" ]; then
 	echo -ne "\tgcc" >> "$makeit"
     fi
+    echo >> "$makeit"
+    echo >> "$makeit"
 }
 
 if_include(){
@@ -274,6 +276,21 @@ main_fnt(){
     p_end
 }
 
+get_source(){
+    local i=0
+    source_c=""
+    while [ $i -lt $tablen ]; do
+	if [ "${tab[$i]:0:12}" = "SOURCES_DIR;" ]; then
+	    source_c="${tab[$i]:12}"
+	    break
+	fi
+	i=$(($i+1))
+    done
+    if [ "${tab[$i]:0:12}" != "SOURCES_DIR;" ]; then
+	source_c="."
+    fi
+}
+
 if [ $# -ne 1 ]; then
     exit 84
 fi
@@ -296,6 +313,7 @@ if [ $? -ne 0 ]; then
     exit 84
 fi
 get_make
+get_source
 if [ -e "$makeit" ]; then
     rm "$makeit"
 fi
