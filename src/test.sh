@@ -151,6 +151,9 @@ p_bckdir(){
 	fi
 	i=$(($i+1))
     done
+    if [ "${tab[$i]:0:8}" != "BCK_DIR;" ]; then
+	echo -ne "\ta.out.tar" >> "$makeit"
+    fi
     echo >> "$makeit"
     echo >> "$makeit"
 }
@@ -165,6 +168,9 @@ p_unzipflags(){
 	fi
 	i=$(($i+1))
     done
+    if [ "${tab[$i]:0:11}" != "UNZIPFLAGS;" ]; then
+	echo -ne "\t-xvf" >> "$makeit"
+    fi
     echo >> "$makeit"
     echo >> "$makeit"
     p_bckdir
@@ -180,6 +186,9 @@ p_unzip(){
 	fi
 	i=$(($i+1))
     done
+    if [ "${tab[$i]:0:6}" != "UNZIP;" ]; then
+	echo -ne "\ttar" >> "$makeit"
+    fi
     echo >> "$makeit"
     echo >> "$makeit"
     p_unzipflags
@@ -195,6 +204,9 @@ p_zipflag(){
 	fi
 	i=$(($i+1))
     done
+    if [ "${tab[$i]:0:9}" != "ZIPFLAGS;" ]; then
+	echo -ne "\t-cvf" >> "$makeit"
+    fi
     echo >> "$makeit"
     echo >> "$makeit"
     p_unzip
@@ -210,6 +222,9 @@ p_zip_and_unzip(){
 	fi
 	i=$(($i+1))
     done
+    if [ "${tab[$i]:0:4}" != "ZIP;" ]; then
+	echo -ne "\ttar" >> "$makeit"
+    fi
     echo >> "$makeit"
     echo >> "$makeit"
     p_zipflag
